@@ -2,7 +2,7 @@
 
 class NaiveBayes:
 
-    def __init__(self, df, missing=None, alpha=0.01):
+    def __init__(self, df, missing=None, alpha=1):
         """
 
         :param df: pandas dataframe of data
@@ -27,6 +27,9 @@ class NaiveBayes:
 
         if exclude:
             self.df = self.df.drop(self.df.columns[[col-1 for col in exclude]], axis=1)
+
+        if self.missing:
+            self.df = self.df.replace(self.missing, None)
 
     def train(self):
         """
@@ -56,7 +59,7 @@ class NaiveBayes:
                 prob = log(self.priors[c])
 
                 for attribute in row.index:
-                    if self.missing and row[attribute] in self.missing:
+                    if not row[attribute]:
                         continue
                     prob += self.likelihoods[attribute][c][row[attribute]]
 
@@ -105,12 +108,12 @@ class NaiveBayes:
                     d = len(unique_instances)
 
                     if self.missing:
-                        d = len(set(unique_instances).difference(set(self.missing)))
+                        d = len(set(unique_instances).difference({None}))
 
                     total = self.class_s[self.class_s == c].count() + alpha * d
 
                     for instance in unique_instances:
-                        if self.missing and (instance in self.missing):
+                        if not instance:
                             continue
 
                         subtotal = ((self.df[attribute] == instance) & (self.class_s == c)).sum() + alpha
@@ -126,3 +129,15 @@ class NaiveBayes:
 
     def return_df(self):
         return self.df
+
+    def return_attributes(self):
+        return self.df.drop([self.class_col], axis=1)
+
+    def return_attributes_no_text(self):
+        from sklearn import preprocessing as pp
+
+        enc = pp.OrdinalEncoder()
+        return enc.fit_transform(self.return_attributes())
+
+    def return_classes(self):
+        return self.class_s
