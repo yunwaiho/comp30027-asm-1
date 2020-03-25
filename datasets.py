@@ -2,6 +2,19 @@ import pandas as pd
 
 
 # Datasets
+"""
+Datasets formatted in tuples describing attributes:
+0. df
+1. column with class labels
+2. columns to be excluded
+3. Missing value placeholders
+4. type of data
+       list with indexes corresponding to datatypes if mixed
+       0 - Nominal
+       1 - Ordinal
+       2 - Numeric
+
+"""
 
 # Nominal
 
@@ -14,7 +27,7 @@ cancer = (pd.read_csv("datasets/breast-cancer-wisconsin.data", header=None, inde
                             "Marginal Adhesion", "Single Epithelial Cell Size",
                             "Bare Nuclei", "Bland Chromatin", "Normal Nucleoli",
                             "Mitoses", "Class")),
-          11, [1], ["?"])
+          11, [1], ["?"], 0)
 
 # Predict type of mushroom [1]
 # Missing vals: ?
@@ -27,7 +40,7 @@ mushroom = (pd.read_csv("datasets/mushroom.data", header=None, index_col=False,
                                "stalk - color - below - ring", "veil - type", "veil - color",
                                "ring - number", "ring - type", "spore - print - color",
                                "population", "habitat")),
-            1, None, ["?"])
+            1, None, ["?"], 0)
 
 
 # Predict diagnosis [1]
@@ -38,7 +51,7 @@ lymphography = (pd.read_csv("datasets/lymphography.data", header=None, index_col
                                   "changes in lym.", "defect in node", "changes in node",
                                   "changes in stru", "special forms", "dislocation of",
                                   "exclusion of no", "no. of nodes in")),
-                1, None, None)
+                1, None, None, 0)
 
 # Numeric
 
@@ -51,15 +64,19 @@ wdbc = (pd.read_csv("datasets/wdbc.data", header=None,index_col=False,
                            "se-fractal dimension", "worst-radius", "worst-texture", "worst-perimeter",
                            "worst-area", "worst-smoothness", "worst-compactness", "worst-concavity",
                            "worst-concave points", "worst-symmetry", "worst-fractal dimension")),
-        2, [1], None)
+        2, [1], None, 2)
        
-wine = pd.read_csv("datasets/wine.data", header=None, index_col=False)
+wine = (pd.read_csv("datasets/wine.data", header=None, index_col=False),
+        1, None, None, 2)
 
 # Ordinal
 
-car = pd.read_csv("datasets/car.data", header=None, index_col=False)
-nursery = pd.read_csv("datasets/nursery.data", header=None, index_col=False)
-somerville = pd.read_csv("datasets/somerville.data", header=None, index_col=False)
+car = (pd.read_csv("datasets/car.data", header=None, index_col=False),
+       7, None, None, 1)
+nursery = (pd.read_csv("datasets/nursery.data", header=None, index_col=False),
+           9, None, None, 1)
+somerville = (pd.read_csv("datasets/somerville.data", header=None, index_col=False),
+              1, None, None, 1)
 
 # Mixed
 
@@ -69,17 +86,17 @@ adult = (pd.read_csv("datasets/adult.data", header=None, index_col=False,
                             "education-num", "marital-status", "occupation",
                             "relationship", "race", "sex", "capital-gain",
                             "capital-loss", "hours-per-week", "native-country", "class")),
-         15, None, ["?"])
+         15, None, ["?"], [2, 0, 2, 1, 1, 0, 0, 0, 0, 0, 2, 2, 2, 0])
 
 # Predict term deposit purchase [15]
 bank = (pd.read_csv("datasets/bank.data", header=None, index_col=False,
                     names=("age", "job", "marital", "education", "default", "balance",
                            "housing", "loan", "contact", "day","campaign", "pdays",
                            "previous", "poutcome", "purchase")),
-        15, None, ["?"])
+        15, None, ["?"], [2, 0, 0, 1, 0, 2, 0, 0, 0, 2, 2, 2, 2, 0])
 
 
-university = (pd.read_csv("datasets/university.data", header=None, index_col=False,
+university = (pd.read_csv("datasets/university.data", header=0, index_col=False,
                           names=("University - name", "State", "Control",
                                  "number - of - students", "male: female(ratio)",
                                  "student: faculty(ratio)", "sat - verbal", "sat - math", 
@@ -87,7 +104,7 @@ university = (pd.read_csv("datasets/university.data", header=None, index_col=Fal
                                  "number - of - applicants", "percent - admittance",
                                  "percent - enrolled", "academics", "social",
                                  "quality - of - life", "academic - emphasis")),
-              (9, 14, 15), [1], [0])
+              (9, 14, 15), [1], [0], [0, 0, 1, 2, 2, 2, 2, 1, 2, 1, 2, 2, 1, 1, 1, 0])
 
 
 
